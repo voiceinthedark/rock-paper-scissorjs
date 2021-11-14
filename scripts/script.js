@@ -59,4 +59,4 @@ function game() {
     return result > 0 ? 'Player Wins' : result < 0 ? 'Computer wins' : 'It\'s a tie'
 }
 
-console.log(game());
+// console.log(game());
