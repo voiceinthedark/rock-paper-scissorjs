@@ -7,20 +7,31 @@ let computerScore = document.querySelector(".computer");
 let message = document.querySelector(".result-message");
 let resetButton = document.querySelector("#reset");
 let resultDiv = document.querySelector('.result');
+const buttons = document.querySelectorAll(".btn");
 resetButton.classList.toggle("hide");
 
 window.onload = () => {
 
     let observer = new MutationObserver((mutations) => {
+        let playerScoreValue = +playerScore.textContent;
+        let computerScoreValue = +computerScore.textContent;
         mutations.forEach((mutation) => {
             // console.log(mutation.type);
             if (
-              playerScore.textContent === '5' ||
-              computerScore.textContent === '5'
+              playerScoreValue === 5 ||
+              computerScoreValue === 5
             ) {
-              resetButton.classList.toggle("hide");
-              return;
-            } 
+                buttons.forEach((button) => {
+                    //   console.log('disabling buttons');                  
+                    if(button.id !== 'reset'){
+                        button.disabled = true;
+                    }
+                });
+                message.textContent = playerScoreValue > computerScoreValue 
+                ? 'Player Wins!' : 'Computer Wins!';              
+                resetButton.classList.remove("hide");
+                return;
+            }
         });
     });
 
@@ -101,14 +112,30 @@ function game(playerSelection) {
   return [playerResult, computerResult];
 }
 
-const buttons = document.querySelectorAll(".btn");
 buttons.forEach((btn) => {
-  btn.addEventListener("click", (e) => {         
-    [playerResult, computerResult] = game(e.target.id);
-    // console.log(playerScore, computerScore);
-    playerScore.textContent = "" + playerResult;
-    computerScore.textContent = "" + computerResult;
-    message.textContent = result.message;
-
-  });
+    if(btn.id !== 'reset'){
+        btn.addEventListener("click", (e) => {
+          [playerResult, computerResult] = game(e.target.id);
+          // console.log(playerScore, computerScore);
+          playerScore.textContent = "" + playerResult;
+          computerScore.textContent = "" + computerResult;
+          message.textContent = result.message;
+        });        
+    }  
 });
+
+resetButton.addEventListener('click', (e) => {
+    playerScore.textContent = '0';
+    computerScore.textContent = '0';
+    message.textContent = 'Let\'s play!';
+    resetButton.classList.add('hide');    
+
+     buttons.forEach((button) => {
+    //    console.log("disabling buttons");
+       if (button.id !== "reset") {
+         button.disabled = false;
+       }
+     });
+
+     playerResult = computerResult = 0;
+})
