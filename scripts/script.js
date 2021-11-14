@@ -7,7 +7,6 @@ function computerPlay() {
     return arr[Math.floor(Math.random() * arr.length)]
 }
 
-// console.log(computerPlay())
 
 function playRound(playerSelection, computerSelection) {
     console.log('player:',playerSelection, 'computer:', computerSelection);
@@ -44,19 +43,22 @@ function playRound(playerSelection, computerSelection) {
     return result
 }
 
-// let playerSelection = 'rock'
-// let computerSelection = computerPlay()
-// console.log(playRound(playerSelection, computerSelection))
-
-function game() {
-    let result = 0
-    let playerSelection;
-    for(let i = 0; i < 5; i++){
-        playerSelection = prompt(`rock, paper or scissors?`, 'rock')
-        result += playRound(playerSelection, computerPlay())[1]
-    }
-    console.log(result);
-    return result > 0 ? 'Player Wins' : result < 0 ? 'Computer wins' : 'It\'s a tie'
+function game(playerSelection, computerSelection) {
+    let playerResult, computerResult = 0;
+    
 }
 
-// console.log(game());
+let playerScore = document.querySelector('.player');
+let computerScore = document.querySelector('.computer');
+let message = document.querySelector('.result-message');
+// message.textContent = ""
+
+
+
+const buttons = document.querySelectorAll('.btn');
+buttons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        // console.log(typeof e.target.id);
+
+    })
+})
