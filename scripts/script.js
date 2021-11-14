@@ -18,8 +18,8 @@ window.onload = () => {
         mutations.forEach((mutation) => {
             // console.log(mutation.type);
             if (
-              playerScoreValue === 5 ||
-              computerScoreValue === 5
+              playerScoreValue >= 5 ||
+              computerScoreValue >= 5
             ) {
                 buttons.forEach((button) => {
                     //   console.log('disabling buttons');                  
