@@ -9,34 +9,39 @@ let resetButton = document.querySelector("#reset");
 let resultDiv = document.querySelector('.result');
 const buttons = document.querySelectorAll(".btn");
 resetButton.classList.toggle("hide");
+let gameEndObserver; // Declare observer in a wider scope
 
-window.onload = () => {
+function setupGameEndObserver() {
+    // Disconnect any existing observer before creating a new one
+    if (gameEndObserver) {
+        gameEndObserver.disconnect();
+    }
 
-    let observer = new MutationObserver((mutations) => {
+    gameEndObserver = new MutationObserver((mutations) => {
         let playerScoreValue = +playerScore.textContent;
         let computerScoreValue = +computerScore.textContent;
-        mutations.forEach((mutation) => {
-            // console.log(mutation.type);
-            if (
-              playerScoreValue >= 5 ||
-              computerScoreValue >= 5
-            ) {
-                buttons.forEach((button) => {
-                    //   console.log('disabling buttons');                  
-                    if(button.id !== 'reset'){
-                        button.disabled = true;
-                    }
-                });
-                message.textContent = playerScoreValue > computerScoreValue 
-                ? 'Player Wins!' : 'Computer Wins!';              
-                resetButton.classList.remove("hide");
-                return;
-            }
-        });
+
+        if (playerScoreValue >= 5 || computerScoreValue >= 5) {
+            // Disconnect the observer to prevent infinite loop from subsequent DOM changes
+            gameEndObserver.disconnect();
+
+            buttons.forEach((button) => {
+                if(button.id !== 'reset'){
+                    button.disabled = true;
+                }
+            });
+            message.textContent = playerScoreValue > computerScoreValue
+            ? 'Player Wins!' : 'Computer Wins!';
+            resetButton.classList.remove("hide");
+        }
     });
 
     let config = {childList: true, subtree: true};
-    observer.observe(resultDiv, config);    
+    gameEndObserver.observe(resultDiv, config);
+}
+
+window.onload = () => {
+    setupGameEndObserver(); // Initial setup on load
 };
 
 function computerPlay() {
@@ -45,7 +50,7 @@ function computerPlay() {
 }
 
 function playRound(playerSelection, computerSelection) {
-  //   console.log("player:", playerSelection, "computer:", computerSelection);
+    console.log("player:", playerSelection, "computer:", computerSelection);
 
   const table = {
     rock: "" + 1,
@@ -138,4 +143,7 @@ resetButton.addEventListener('click', (e) => {
      });
 
      playerResult = computerResult = 0;
+
+       // Reconnect the observer when the game resets
+       setupGameEndObserver();
 })
